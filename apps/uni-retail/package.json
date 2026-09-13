@@ -1,0 +1,29 @@
+{
+  "name": "retailops-uni-app",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev:h5": "uni -p h5",
+    "dev:mp-weixin": "uni -p mp-weixin",
+    "dev:app": "uni -p app",
+    "build:h5": "uni build -p h5",
+    "build:mp-weixin": "uni build -p mp-weixin",
+    "build:app": "uni build -p app"
+  },
+  "dependencies": {
+    "@dcloudio/uni-app": "latest",
+    "@dcloudio/uni-app-plus": "latest",
+    "@dcloudio/uni-components": "latest",
+    "@dcloudio/uni-h5": "latest",
+    "@dcloudio/uni-mp-weixin": "latest",
+    "pinia": "^3.0.3",
+    "vue": "^3.5.21"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "latest",
+    "@dcloudio/vite-plugin-uni": "latest",
+    "sass": "^1.92.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.5"
+  }
+}

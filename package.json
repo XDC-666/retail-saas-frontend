@@ -1,0 +1,64 @@
+{
+  "name": "retail-saas-frontend",
+  "private": true,
+  "version": "3.0.0",
+  "description": "Interview-ready multi-tenant retail SaaS frontend: Vue 3, TypeScript, ECharts, dynamic RBAC, Electron, Uni-App, Vitest and Playwright.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "mock": "node mock-server/server-v3.mjs",
+    "dev:full": "concurrently -k -n API,WEB -c auto \"npm:mock\" \"npm:dev\"",
+    "dev:electron": "concurrently -k -n API,WEB,DESKTOP -c auto \"npm:mock\" \"vite --host 0.0.0.0\" \"wait-on http://127.0.0.1:5173/api/health && cross-env VITE_DEV_SERVER_URL=http://127.0.0.1:5173 electron electron/main.cjs\"",
+    "build": "vue-tsc --noEmit && vite build",
+    "build:desktop": "npm run build && electron-builder",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "generate:api": "openapi-typescript openapi/openapi.yaml -o src/api/generated/schema.d.ts"
+  },
+  "dependencies": {
+    "echarts": "^6.0.0",
+    "pinia": "^3.0.3",
+    "vue-i18n": "^11.1.12",
+    "zod": "^4.1.8",
+    "vue": "^3.5.21",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0",
+    "@types/node": "^24.3.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/test-utils": "^2.4.6",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.0.0",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
+    "jsdom": "^26.1.0",
+    "openapi-typescript": "^7.9.1",
+    "sass": "^1.92.0",
+    "typescript": "^5.9.2",
+    "unocss": "^66.5.1",
+    "vite": "^7.1.5",
+    "vitest": "^3.2.4",
+    "vue-tsc": "^3.0.6",
+    "wait-on": "^8.0.4"
+  },
+  "build": {
+    "appId": "com.example.retailops",
+    "productName": "RetailOps SaaS",
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "directories": { "output": "release" },
+    "mac": { "target": "dmg" },
+    "win": { "target": "nsis" },
+    "linux": { "target": "AppImage" }
+  },
+  "main": "electron/main.cjs"
+}

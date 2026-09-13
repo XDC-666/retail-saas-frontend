@@ -1,0 +1,27 @@
+openapi: 3.1.0
+info: { title: RetailOps API, version: 3.0.0 }
+servers: [{ url: /api }]
+security: [{ bearerAuth: [] }]
+paths:
+  /auth/login:
+    post: { security: [], operationId: login, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/LoginPayload' } } } }, responses: { '200': { description: OK, content: { application/json: { schema: { type: object, properties: { token: { type: string }, user: { $ref: '#/components/schemas/User' } }, required: [token, user] } } } } } }
+  /orders/{id}:
+    get: { operationId: getOrder, parameters: [{ in: path, name: id, required: true, schema: { type: string } }], responses: { '200': { description: OK, content: { application/json: { schema: { type: object, properties: { item: { $ref: '#/components/schemas/Order' } }, required: [item] } } } } } }
+  /stores:
+    get: { operationId: listStores, parameters: [{ in: query, name: tenantId, schema: { type: string } }], responses: { '200': { description: OK } } }
+    post: { operationId: createStore, requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StoreInput' } } } }, responses: { '201': { description: Created } } }
+  /stores/{id}:
+    patch: { operationId: updateStore, parameters: [{ in: path, name: id, required: true, schema: { type: string } }], requestBody: { required: true, content: { application/json: { schema: { $ref: '#/components/schemas/StoreInput' } } } }, responses: { '200': { description: OK } } }
+  /rbac/roles:
+    get: { operationId: listRoles, responses: { '200': { description: OK } } }
+  /rbac/roles/{id}:
+    patch: { operationId: updateRole, parameters: [{ in: path, name: id, required: true, schema: { type: string } }], responses: { '200': { description: OK } } }
+  /sales/mock-large:
+    get: { operationId: listLargeSales, parameters: [{ in: query, name: count, schema: { type: integer, maximum: 100000 } }], responses: { '200': { description: OK } } }
+components:
+  securitySchemes: { bearerAuth: { type: http, scheme: bearer } }
+  schemas:
+    LoginPayload: { type: object, required: [email, password], properties: { email: { type: string, format: email }, password: { type: string } } }
+    User: { type: object, required: [id, email, name, role, permissions], properties: { id: { type: string }, email: { type: string }, name: { type: string }, role: { type: string, enum: [owner, manager, clerk] }, permissions: { type: array, items: { type: string } } } }
+    StoreInput: { type: object, required: [name, city, manager, address, phone, target, status], properties: { name: { type: string }, city: { type: string }, manager: { type: string }, address: { type: string }, phone: { type: string }, target: { type: number }, status: { type: string, enum: [open, closed] } } }
+    Order: { type: object, required: [id, orderNo, storeName, status, paidAmount], properties: { id: { type: string }, orderNo: { type: string }, storeName: { type: string }, status: { type: string }, paidAmount: { type: number } } }

@@ -1,0 +1,1 @@
+export default { nav: { dashboard: '经营看板', sales: '销售明细', stores: '门店管理', permissions: '权限配置' }, common: { save: '保存更改', cancel: '取消', loading: '加载中…', edit: '编辑', create: '新增门店' }, topbar: { tenant: '当前租户', language: '语言' } }

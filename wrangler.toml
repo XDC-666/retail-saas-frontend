@@ -1,0 +1,7 @@
+name = "retailops-demo-api"
+main = "workers/api.ts"
+compatibility_date = "2026-09-01"
+
+[[kv_namespaces]]
+binding = "DEMO_LOGS"
+id = "replace-with-cloudflare-kv-id"

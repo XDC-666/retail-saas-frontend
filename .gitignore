@@ -1,0 +1,15 @@
+node_modules/
+dist/
+release/
+playwright-report/
+test-results/
+apps/uni-retail/node_modules/
+apps/uni-retail/dist/
+unpackage/
+.DS_Store
+*.log
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/

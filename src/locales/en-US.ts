@@ -1,0 +1,1 @@
+export default { nav: { dashboard: 'Dashboard', sales: 'Sales', stores: 'Stores', permissions: 'Permissions' }, common: { save: 'Save changes', cancel: 'Cancel', loading: 'Loading…', edit: 'Edit', create: 'New store' }, topbar: { tenant: 'Current tenant', language: 'Language' } }

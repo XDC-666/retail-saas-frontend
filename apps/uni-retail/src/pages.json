@@ -1,0 +1,22 @@
+{
+  "pages": [
+    { "path": "pages/login/index", "style": { "navigationBarTitleText": "RetailOps 登录", "navigationStyle": "custom" } },
+    { "path": "pages/dashboard/index", "style": { "navigationBarTitleText": "经营看板" } },
+    { "path": "pages/sales/index", "style": { "navigationBarTitleText": "销售明细", "enablePullDownRefresh": true } },
+    { "path": "pages/profile/index", "style": { "navigationBarTitleText": "我的" } }
+  ],
+  "tabBar": {
+    "color": "#718096",
+    "selectedColor": "#4f46e5",
+    "list": [
+      { "pagePath": "pages/dashboard/index", "text": "看板" },
+      { "pagePath": "pages/sales/index", "text": "销售" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f6f7fb"
+  }
+}
