@@ -200,18 +200,17 @@ retail-saas-frontend/
 └── .github/workflows/ci.yml
 ```
 
-## GitHub 上传
+## 本地二次开发
 
 ```bash
-git init
-git add .
-git commit -m "feat: build interview-ready retail saas frontend"
-git branch -M main
-git remote add origin https://github.com/<your-name>/retail-saas-frontend.git
-git push -u origin main
+npm install
+npm run dev:full      # 同时启动 Mock Server 与前端开发服务器
+npm run dev:electron  # 启动 Electron 桌面端
+npm run test          # 运行 Vitest 单元测试
+npm run test:e2e      # 运行 Playwright E2E 测试
 ```
 
-推送到 GitHub 后，Actions 会执行 typecheck、Vitest、production build 和 Playwright E2E。
+推送到 GitHub 后，Actions 会自动执行 typecheck、Vitest、production build 和 Playwright E2E。
 
 ## 面试讲解资料
 
