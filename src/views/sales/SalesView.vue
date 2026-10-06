@@ -109,7 +109,7 @@ watch(
         </label>
         <label class="field">
           <span>门店</span>
-          <select v-model="sales.query.storeId">
+          <select v-model="sales.query.storeId" data-testid="filter-store">
             <option value="">全部门店</option>
             <option v-for="store in sales.stores" :key="store.id" :value="store.id">
               {{ store.name }}
@@ -118,7 +118,7 @@ watch(
         </label>
         <label class="field">
           <span>渠道</span>
-          <select v-model="sales.query.channel">
+          <select v-model="sales.query.channel" data-testid="filter-channel">
             <option value="">全部渠道</option>
             <option v-for="channel in channels" :key="channel" :value="channel">
               {{ channel }}

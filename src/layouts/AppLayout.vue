@@ -73,7 +73,7 @@ function changeLocale(event: Event) {
           <h2 class="topbar__title">{{ pageTitle }}</h2>
         </div>
         <div class="topbar__actions">
-          <select class="language-select" :value="locale" @change="changeLocale"><option value="zh-CN">中文</option><option value="en-US">English</option></select>
+          <select class="language-select" :value="locale" data-testid="language-select" @change="changeLocale"><option value="zh-CN">中文</option><option value="en-US">English</option></select>
           <button class="icon-button" type="button" data-testid="theme-toggle" :aria-label="theme.isDark ? '切换浅色主题' : '切换深色主题'" @click="theme.toggle">
             <AppIcon :name="theme.isDark ? 'sun' : 'moon'" />
           </button>
