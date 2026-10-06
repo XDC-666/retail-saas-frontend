@@ -1,7 +1,11 @@
 const API_BASE = 'http://127.0.0.1:8787/api'
+const TOKEN_KEY = 'retailops:token'
 
-export function request<T>(path: string, options: UniApp.RequestOptions = {} as UniApp.RequestOptions): Promise<T> {
-  const token = uni.getStorageSync('retailops:token') as string
+export function request<T>(
+  path: string,
+  options: UniApp.RequestOptions = {} as UniApp.RequestOptions,
+): Promise<T> {
+  const token = uni.getStorageSync(TOKEN_KEY) as string
   return new Promise((resolve, reject) => {
     uni.request({
       ...options,

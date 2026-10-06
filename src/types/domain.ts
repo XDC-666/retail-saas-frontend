@@ -64,10 +64,51 @@ export interface Store {
   phone: string
 }
 export type StoreInput = Omit<Store, 'id' | 'tenantId'>
-export interface OrderItem { id:string; name:string; quantity:number; unitPrice:number }
-export interface OrderEvent { id:string; label:string; detail:string; time:string; status:'done'|'current' }
-export interface OrderDetail { id:string; orderNo:string; tenantId:string; storeId:string; storeName:string; customer:{name:string;phone:string;memberLevel:string}; status:'paid'|'refunded'|'completed'; paymentMethod:string; subtotal:number; discount:number; paidAmount:number; refundAmount:number; items:OrderItem[]; timeline:OrderEvent[] }
-export interface RoleDefinition { id:Role; name:string; description:string; userCount:number; enabled:boolean; permissions:Permission[] }
+
+export interface OrderItem {
+  id: string
+  name: string
+  quantity: number
+  unitPrice: number
+}
+
+export interface OrderEvent {
+  id: string
+  label: string
+  detail: string
+  time: string
+  status: 'done' | 'current'
+}
+
+export interface OrderDetail {
+  id: string
+  orderNo: string
+  tenantId: string
+  storeId: string
+  storeName: string
+  customer: {
+    name: string
+    phone: string
+    memberLevel: string
+  }
+  status: 'paid' | 'refunded' | 'completed'
+  paymentMethod: string
+  subtotal: number
+  discount: number
+  paidAmount: number
+  refundAmount: number
+  items: OrderItem[]
+  timeline: OrderEvent[]
+}
+
+export interface RoleDefinition {
+  id: Role
+  name: string
+  description: string
+  userCount: number
+  enabled: boolean
+  permissions: Permission[]
+}
 
 export type SaleChannel = '线下门店' | '微信小程序' | '外卖平台'
 

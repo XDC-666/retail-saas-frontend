@@ -20,7 +20,12 @@ export const routeManifest: Record<RouteCode, RouteRecordRaw> = {
     component: () => import('@/views/stores/StoresView.vue'),
     meta: { permission: 'stores:view', title: '门店管理' },
   },
-  permissions:{path:'permissions',name:'permissions',component:()=>import('@/views/admin/PermissionView.vue'),meta:{permission:'rbac:view',title:'权限配置'}},
+  permissions: {
+    path: 'permissions',
+    name: 'permissions',
+    component: () => import('@/views/admin/PermissionView.vue'),
+    meta: { permission: 'rbac:view', title: '权限配置' },
+  },
 }
 
 export function getRouteByNavigation(item: NavigationItem) {

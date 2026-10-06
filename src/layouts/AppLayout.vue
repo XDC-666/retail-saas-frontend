@@ -5,7 +5,8 @@ import { useAuthStore } from '@/stores/auth'
 import { useThemeStore } from '@/stores/theme'
 import { usePlatform } from '@/composables/usePlatform'
 import AppIcon from '@/components/common/AppIcon.vue'
-import { useI18n } from 'vue-i18n'; import { setLocale } from '@/locales'
+import { useI18n } from 'vue-i18n'
+import { setLocale, type Locale } from '@/locales'
 
 const auth = useAuthStore()
 const theme = useThemeStore()
@@ -24,7 +25,9 @@ async function logout() {
   await auth.logout()
   await router.replace('/login')
 }
-function changeLocale(e:Event){setLocale((e.target as HTMLSelectElement).value as 'zh-CN'|'en-US')}
+function changeLocale(event: Event) {
+  setLocale((event.target as HTMLSelectElement).value as Locale)
+}
 </script>
 
 <template>

@@ -17,13 +17,28 @@ export const useStoresStore = defineStore('stores', () => {
     }
   }
 
+  function replace(store: Store) {
+    const index = items.value.findIndex((item) => item.id === store.id)
+    if (index >= 0) items.value[index] = store
+  }
+
   async function toggleStatus(store: Store, token: string) {
     const next = store.status === 'open' ? 'closed' : 'open'
     const data = await updateStoreStatus(store.id, next, token)
-    const index = items.value.findIndex((item) => item.id === store.id)
-    if (index >= 0) items.value[index] = data.item
+    replace(data.item)
   }
-  async function save(input:StoreInput,token:string,id?:string){const data=await saveStore(input,token,id);const index=items.value.findIndex(x=>x.id===data.item.id);if(index>=0)items.value[index]=data.item;else items.value.unshift(data.item);return data.item}
+
+  /** 已存在则原地更新，否则插到列表头部 */
+  async function save(input: StoreInput, token: string, id?: string) {
+    const data = await saveStore(input, token, id)
+    const index = items.value.findIndex((item) => item.id === data.item.id)
+    if (index >= 0) {
+      items.value[index] = data.item
+    } else {
+      items.value.unshift(data.item)
+    }
+    return data.item
+  }
 
   return { items, loading, load, toggleStatus, save }
 })
