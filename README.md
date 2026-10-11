@@ -218,6 +218,7 @@ npm run test:e2e      # 运行 Playwright E2E 测试
 
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)：架构 / RBAC / 多租户 / Mock API / 跨端策略
 - [`docs/INTERVIEW.md`](docs/INTERVIEW.md)：30 秒讲法、2 分钟演示顺序、高频追问
+- [`docs/INTERVIEW-STAR.md`](docs/INTERVIEW-STAR.md)：**STAR 量化讲稿**（实测数据、越权排查复盘、追问预案）
 - [`apps/uni-retail/README.md`](apps/uni-retail/README.md)：Uni-App 运行说明
 
 ## License
