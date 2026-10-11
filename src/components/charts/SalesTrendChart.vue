@@ -24,7 +24,9 @@ function render() {
     animationDuration: 650,
     tooltip: { trigger: 'axis', valueFormatter: (value: unknown) => Number(value).toLocaleString('zh-CN') },
     legend: { right: 0, top: 0, textStyle: { color: textColor }, data: ['销售额', '订单数'] },
-    grid: { left: 12, right: 12, top: 44, bottom: 8, containLabel: true },
+    // ECharts 6 起 grid.containLabel 已废弃（不注册 LegacyGridContainLabel 时会被静默忽略，
+    // 导致轴标签溢出被裁切）。官方等价写法为下面两项。
+    grid: { left: 12, right: 12, top: 44, bottom: 8, outerBoundsMode: 'same', outerBoundsContain: 'axisLabel' },
     xAxis: {
       type: 'category',
       boundaryGap: false,
