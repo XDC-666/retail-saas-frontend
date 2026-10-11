@@ -1,0 +1,20 @@
+# 统一行尾策略：仓库内一律以 LF 存储，避免 Windows / macOS / Linux
+# 协同时因 core.autocrlf 差异产生"内容未变却整文件被标记为修改"的伪差异。
+* text=auto eol=lf
+
+# 二进制文件不做行尾与文本转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# 明确声明脚本语言，保证在任何平台检出时都是 LF
+*.sh text eol=lf
+*.ts text eol=lf
+*.mjs text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
