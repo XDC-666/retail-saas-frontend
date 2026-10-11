@@ -95,7 +95,9 @@ npm run dev:full
 npm run dev:full       # Web + Mock API
 npm run dev:electron   # Mock API + Vite + Electron
 npm run typecheck      # vue-tsc
-npm run test:unit      # Vitest
+npm run test           # 全部测试（单测 + 接口授权 + E2E）
+npm run test:unit      # Vitest 单元测试
+npm run test:api       # Mock Server 授权/多租户回归测试
 npm run test:e2e       # Playwright
 npm run build          # Web production build
 npm run build:desktop  # Electron Builder

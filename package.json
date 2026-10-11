@@ -13,9 +13,10 @@
     "build:desktop": "npm run build && electron-builder",
     "preview": "vite preview",
     "typecheck": "vue-tsc --noEmit",
-    "test": "npm run test:unit && npm run test:e2e",
+    "test": "npm run test:unit && npm run test:api && npm run test:e2e",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
+    "test:api": "node --test mock-server/authz.test.mjs",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "generate:api": "openapi-typescript openapi/openapi.yaml -o src/api/generated/schema.d.ts"

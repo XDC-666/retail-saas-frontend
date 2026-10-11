@@ -234,10 +234,30 @@ const server = http.createServer(async (req, res) => {
     return json(res, 200, { items: stores.filter((item) => item.tenantId === tenantId) })
   }
   if(req.method==='POST'&&url.pathname.startsWith('/api/log/')){await readBody(req);return json(res,202,{accepted:true})}
-  if(req.method==='GET'&&url.pathname==='/api/rbac/roles'){const user=requireUser(req,res);if(!user)return;return json(res,200,{items:[{id:'owner',name:'超级管理员',description:'完整系统权限',userCount:3,enabled:true,permissions:user.permissions},{id:'manager',name:'区域经理',description:'经营与门店只读',userCount:12,enabled:true,permissions:['dashboard:view','sales:view','sales:export','stores:view']},{id:'clerk',name:'门店员工',description:'日常经营查看',userCount:80,enabled:true,permissions:['dashboard:view','sales:view']}],permissions:[{code:'dashboard:view',label:'查看看板',group:'看板'},{code:'sales:view',label:'查看销售',group:'销售'},{code:'sales:export',label:'导出销售',group:'销售'},{code:'stores:view',label:'查看门店',group:'门店'},{code:'stores:manage',label:'编辑门店',group:'门店'},{code:'rbac:view',label:'查看权限',group:'系统'},{code:'rbac:manage',label:'配置权限',group:'系统'}]})}
-  if(req.method==='PATCH'&&url.pathname.startsWith('/api/rbac/roles/')){const user=requireUser(req,res);if(!user)return;const body=await readBody(req);return json(res,200,{item:{id:url.pathname.split('/').pop(),name:'区域经理',description:'权限已更新',userCount:12,enabled:true,permissions:body.permissions||[]}})}
-  if(req.method==='GET'&&url.pathname==='/api/sales/mock-large'){const user=requireUser(req,res);if(!user)return;const seed=sales.filter(x=>x.tenantId===(url.searchParams.get('tenantId')||user.tenantId));const items=Array.from({length:100000},(_,i)=>({...seed[i%seed.length],id:`large-${i}`}));return json(res,200,{items,total:items.length})}
-  if(req.method==='GET'&&url.pathname.startsWith('/api/orders/')){const user=requireUser(req,res);if(!user)return;const row=sales.find(x=>x.id===url.pathname.split('/').pop());if(!row)return error(res,404,'订单不存在');const subtotal=Math.round(row.amount/row.orders);return json(res,200,{item:{id:row.id,orderNo:`SO${row.date.replaceAll('-','')}0001`,tenantId:row.tenantId,storeId:row.storeId,storeName:row.storeName,customer:{name:'林晓',phone:'138****2719',memberLevel:'金卡会员'},status:'completed',paymentMethod:'微信支付',subtotal,discount:8,paidAmount:subtotal-8,refundAmount:0,items:[{id:'1',name:'精品拿铁',quantity:2,unitPrice:34}],timeline:[{id:'1',label:'创建订单',detail:'收银台创建',time:`${row.date} 14:21`,status:'done'},{id:'2',label:'支付成功',detail:'微信支付',time:`${row.date} 14:22`,status:'current'}]}})}
+  if(req.method==='GET'&&url.pathname==='/api/rbac/roles'){
+    const user=requireUser(req,res);if(!user)return
+    // 授权校验：角色/权限清单属敏感配置，必须要求 rbac:view，不能只验登录态
+    if(!hasPermission(user,'rbac:view'))return error(res,403,'没有权限配置查看权限','FORBIDDEN')
+    return json(res,200,{items:[{id:'owner',name:'超级管理员',description:'完整系统权限',userCount:3,enabled:true,permissions:['dashboard:view','sales:view','sales:export','stores:view','stores:manage','rbac:view','rbac:manage']},{id:'manager',name:'区域经理',description:'经营与门店只读',userCount:12,enabled:true,permissions:['dashboard:view','sales:view','sales:export','stores:view']},{id:'clerk',name:'门店员工',description:'日常经营查看',userCount:80,enabled:true,permissions:['dashboard:view','sales:view']}],permissions:[{code:'dashboard:view',label:'查看看板',group:'看板'},{code:'sales:view',label:'查看销售',group:'销售'},{code:'sales:export',label:'导出销售',group:'销售'},{code:'stores:view',label:'查看门店',group:'门店'},{code:'stores:manage',label:'编辑门店',group:'门店'},{code:'rbac:view',label:'查看权限',group:'系统'},{code:'rbac:manage',label:'配置权限',group:'系统'}]})}
+  if(req.method==='PATCH'&&url.pathname.startsWith('/api/rbac/roles/')){
+    const user=requireUser(req,res);if(!user)return
+    // 授权校验：改角色权限等同提权操作，必须要求 rbac:manage
+    if(!hasPermission(user,'rbac:manage'))return error(res,403,'没有权限配置修改权限','FORBIDDEN')
+    const body=await readBody(req);return json(res,200,{item:{id:url.pathname.split('/').pop(),name:'区域经理',description:'权限已更新',userCount:12,enabled:true,permissions:body.permissions||[]}})}
+  if(req.method==='GET'&&url.pathname==='/api/sales/mock-large'){
+    const user=requireUser(req,res);if(!user)return
+    // 授权 + 租户校验：该接口一次性返回 10 万条（导出级体量），
+    // 因此按导出权限要求 sales:export，并强制租户隔离，避免被当作资源放大器。
+    if(!hasPermission(user,'sales:export'))return error(res,403,'没有销售数据导出权限','FORBIDDEN')
+    const tenantId=url.searchParams.get('tenantId')||user.tenantId
+    if(!canAccessTenant(user,tenantId))return error(res,403,'无权访问该租户','TENANT_FORBIDDEN')
+    const seed=sales.filter(x=>x.tenantId===tenantId);const items=Array.from({length:100000},(_,i)=>({...seed[i%seed.length],id:`large-${i}`}));return json(res,200,{items,total:items.length})}
+  if(req.method==='GET'&&url.pathname.startsWith('/api/orders/')){
+    const user=requireUser(req,res);if(!user)return
+    if(!hasPermission(user,'sales:view'))return error(res,403,'没有销售数据权限','FORBIDDEN')
+    const row=sales.find(x=>x.id===url.pathname.split('/').pop());
+    // 租户隔离：无权访问与不存在统一返回 404，避免通过状态码探测他租户单据是否存在
+    if(!row||!canAccessTenant(user,row.tenantId))return error(res,404,'订单不存在','NOT_FOUND');const subtotal=Math.round(row.amount/row.orders);return json(res,200,{item:{id:row.id,orderNo:`SO${row.date.replaceAll('-','')}0001`,tenantId:row.tenantId,storeId:row.storeId,storeName:row.storeName,customer:{name:'林晓',phone:'138****2719',memberLevel:'金卡会员'},status:'completed',paymentMethod:'微信支付',subtotal,discount:8,paidAmount:subtotal-8,refundAmount:0,items:[{id:'1',name:'精品拿铁',quantity:2,unitPrice:34}],timeline:[{id:'1',label:'创建订单',detail:'收银台创建',time:`${row.date} 14:21`,status:'done'},{id:'2',label:'支付成功',detail:'微信支付',time:`${row.date} 14:22`,status:'current'}]}})}
 
   const storeMatch = url.pathname.match(/^\/api\/stores\/([^/]+)$/)
   if (req.method === 'PATCH' && storeMatch) {
